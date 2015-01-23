@@ -1,0 +1,85 @@
+/*-----------------------------------------
+   Colors
+  ----------------------------------------- */
+$textcolor: #444;
+$background: white;
+$itembackground: #e6e7e8;
+
+/*-----------------------------------------
+   Item list
+  ----------------------------------------- */
+@mixin item-list {
+    .item-list {
+        margin-bottom: 6px;
+        .item {
+            color: #333;
+            background-color: $itembackground;
+            margin-right: 8px;
+            a {
+                color: white;
+            }
+        }
+    }
+}
+
+/*-----------------------------------------
+   Magic Search bar
+  ----------------------------------------- */
+.search-bar {
+    position: relative;
+    border: 1px solid black;
+    background-color: $background;
+    margin-bottom: 0.5rem;
+    padding: 4px;
+    height: auto;
+    i.fi-filter {
+        color: $textcolor;
+        position: absolute;
+        top: 0.5rem;
+        left: 0.65rem;
+        //&.has-items {
+        //    margin-top: 6px;
+        //}
+    }
+    #search-main-area {
+        position: relative;
+        margin-left: 1.65rem;
+        margin-right: 1.65rem;
+        cursor: text;
+    }
+    @include item-list;
+    .item-list {
+        margin-bottom: 2px;
+    }
+    #search-selected {
+        background-color: $background;
+        color: $textcolor;
+    }
+    #search-entry {
+        display: inline-block;
+        height: 1.5rem;
+    }
+    #search-input {
+        width: 220px;
+        border: 0;
+        box-shadow: none;
+        height: 1.5rem;
+        padding: 3px;
+        background-color: $background;
+        //&.has-items {
+        //    margin-top: 6px;
+        //}
+    }
+    .match {
+        font-weight: bold;
+    }
+    i.cancel {
+        color: $textcolor;
+        &:hover {
+            color: darkred;
+        }
+        position: absolute;
+        top: 0.5rem;
+        right: 0.65rem;
+    }
+}

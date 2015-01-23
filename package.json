@@ -1,0 +1,15 @@
+{
+  "name": "magic-search",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-bowercopy": "~1.1.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "jshint-stylish": "~1.0.0",
+    "bower": "~1.3.12",
+    "grunt-contrib-compass": "~1.0.1",
+    "grunt-contrib-copy": "~0.7.0",
+    "grunt-contrib-watch": "~0.6.1"
+  }
+}

@@ -1,0 +1,56 @@
+<!--! Magic Searchbar -->
+<div id="magic-search" ng-app="MagicSearch" i18n:domain="eucaconsole"
+     ng-controller="MagicSearchCtrl" ng-init="initSearch('${facets_json}', ${filter_keys})">
+    <link rel="stylesheet" href="${request.static_path('eucaconsole:static/css/widgets/magic_search.css')}"
+          type="text/css" charset="utf-8" />
+    <div class="search-bar">
+        <i class="fi-filter go" ng-class="{'has-items': currentSearch.length &gt; 0}"></i>
+        <div id="search-main-area">
+            <span class="item-list">
+                <span class="label radius secondary item"
+                      ng-repeat="facet in currentSearch" ng-cloak="cloak">
+                    <span>
+                        {{ facet.label[0] }}:<b>{{ facet.label[1] }}</b>
+                    </span>
+                    <a class="remove" ng-click="removeFacet($index, $event)"
+                       title="Remove facet" i18n:translate="title"><i class="fi-x"></i></a>
+                </span>
+            </span>
+            <span id="search-selected" class="label" ng-cloak="" ng-show="facetSelected">
+                {{ facetSelected.label[0] }}:
+            </span>
+            <div id="search-entry">
+                <input id="search-input" type="text" data-dropdown="facet-drop"
+                       placeholder="Select facets for filter, or enter text to search"
+                       i18n:attributes="placeholder" autocomplete="off"
+                       ng-class="{'has-items': currentSearch.length &gt; 0}" />
+                <ul id="facet-drop" class="f-dropdown" data-dropdown-content="">
+                    <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
+                        <a ng-click="facetClicked($index, $event, facet.name)"
+                           ng-show="!isMatchLabel(facet.label)">{{ facet.label }}</a>
+                        <a ng-click="facetClicked($index, $event, facet.name)"
+                           ng-show="isMatchLabel(facet.label)">
+                           {{ facet.label[0] }}<span class="match">{{ facet.label[1] }}</span>{{ facet.label[2] }}
+                        </a>
+                    </li>
+                    <li ng-repeat="option in filteredOptions" ng-show="facetSelected">
+                        <a ng-click="optionClicked($index, $event, option.key)"
+                           ng-show="!isMatchLabel(option.label)">
+                           {{ option.label }}
+                        </a>
+                        <a ng-click="optionClicked($index, $event, option.key)"
+                           ng-show="isMatchLabel(option.label)">
+                           {{ option.label[0] }}<span class="match">{{ option.label[1] }}</span>{{ option.label[2] }}
+                        </a>
+                </ul>
+            </div>
+        </div>
+        <a ng-click="clearSearch()" ng-show="currentSearch.length &gt; -1" title="Clear search"
+           i18n:translate="title"><i class="fi-x cancel"></i></a>
+    </div>
+    <div id="itsmagic" class="reveal-modal small" data-reveal>
+        <img src="http://i.imgur.com/iZcUNxH.gif"/>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+    <script src="${request.static_path('eucaconsole:static/js/widgets/magic_search.js')}"></script>
+</div>
