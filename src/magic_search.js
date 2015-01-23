@@ -1,4 +1,6 @@
 /**
+ * Copyright 2014-2015 Eucalyptus Systems, Inc.
+ *
  * @fileOverview Magic Search JS
  * @requires AngularJS
  *
