@@ -36,3 +36,25 @@ Grunt Setup
 
 to install npm packages listed in the file `package.json`
 
+Grunt Commands
+--------------
+* dist: runs compass and copy commands to populate dist directory
+::
+
+    grunt dist
+
+* release: runs dist and tags a release
+::
+
+    grunt release
+
+* jshint: runs javscript checker
+::
+
+    grunt jshint
+
+* watch: runs compass in watch mode so that updates to scss files are processed
+::
+
+    grunt watch
+
