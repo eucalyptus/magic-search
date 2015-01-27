@@ -1,10 +1,5 @@
-<!-- Copyright 2014-2015 Eucalyptus Systems, Inc. -->
-
 <!--! Magic Searchbar -->
-<div id="magic-search" ng-app="MagicSearch" i18n:domain="eucaconsole"
-     ng-controller="MagicSearchCtrl" ng-init="initSearch('${facets_json}', ${filter_keys})">
-    <link rel="stylesheet" href="${request.static_path('eucaconsole:static/css/widgets/magic_search.css')}"
-          type="text/css" charset="utf-8" />
+<div id="magic-search">
     <div class="search-bar">
         <i class="fi-filter go" ng-class="{'has-items': currentSearch.length &gt; 0}"></i>
         <div id="search-main-area">
@@ -14,8 +9,9 @@
                     <span>
                         {{ facet.label[0] }}:<b>{{ facet.label[1] }}</b>
                     </span>
-                    <a class="remove" ng-click="removeFacet($index, $event)"
-                       title="Remove facet" i18n:translate="title"><i class="fi-x"></i></a>
+                    <a class="remove" ng-click="removeFacet($index, $event)" title="{{ strings.remove }}">
+                        <i class="fi-x"></i>
+                    </a>
                 </span>
             </span>
             <span id="search-selected" class="label" ng-cloak="" ng-show="facetSelected">
@@ -23,8 +19,7 @@
             </span>
             <div id="search-entry">
                 <input id="search-input" type="text" data-dropdown="facet-drop"
-                       placeholder="Select facets for filter, or enter text to search"
-                       i18n:attributes="placeholder" autocomplete="off"
+                       placeholder="{{ strings.prompt }}" autocomplete="off"
                        ng-class="{'has-items': currentSearch.length &gt; 0}" />
                 <ul id="facet-drop" class="f-dropdown" data-dropdown-content="">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
@@ -47,12 +42,12 @@
                 </ul>
             </div>
         </div>
-        <a ng-click="clearSearch()" ng-show="currentSearch.length &gt; -1" title="Clear search"
-           i18n:translate="title"><i class="fi-x cancel"></i></a>
+        <a ng-click="clearSearch()" ng-show="currentSearch.length &gt; 0" title="{{ strings.cancel }}">
+            <i class="fi-x cancel"></i>
+        </a>
     </div>
     <div id="itsmagic" class="reveal-modal small" data-reveal>
         <img src="http://i.imgur.com/iZcUNxH.gif"/>
         <a class="close-reveal-modal">&#215;</a>
     </div>
-    <script src="${request.static_path('eucaconsole:static/js/widgets/magic_search.js')}"></script>
 </div>
