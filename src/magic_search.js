@@ -8,7 +8,7 @@ angular.module('MagicSearch', [])
         return {
             restrict: 'E',
             scope: {
-                facets_json: '=facets',
+                facets_json: '@facets',
                 filter_keys: '=filterKeys',
                 strings: '=strings'
             },
@@ -19,8 +19,8 @@ angular.module('MagicSearch', [])
                 $scope.currentSearch = [];
                 $scope.initSearch = function() {
                     // Parse facets JSON and convert to a list of facets.
-                    //facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
-                    $scope.facetsObj = $scope.facets_json; //JSON.parse(facetsJson);
+                    facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
+                    $scope.facetsObj = JSON.parse(facetsJson);
                     // set facets selected and remove them from facetsObj
                     var initialFacets = window.location.search;
                     if (initialFacets.indexOf('?') === 0) {
@@ -163,9 +163,6 @@ angular.module('MagicSearch', [])
                                 }, 0.1);
                             }
                             else {
-                                if (search_val == 'itsmagic') {
-                                    $('#itsmagic').foundation('reveal', 'open');
-                                }
                                 $scope.$emit('textSearch', search_val, $scope.filter_keys);
                                 $scope.hideMenu();
                             }
