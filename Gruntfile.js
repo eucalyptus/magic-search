@@ -51,6 +51,7 @@ module.exports = function(grunt) {
 
   function run(cmd, msg){
     shell.exec(cmd, {silent:true});
+    grunt.log.ok('cmd : '+cmd);
     if( msg ){
       grunt.log.ok(msg);
     }
