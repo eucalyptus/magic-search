@@ -3,7 +3,7 @@
  * @requires AngularJS
  *
  */
-angular.module('MagicSearch', [])
+angular.module('MagicSearch', $(document).foundation ? [] : ['ui.bootstrap'])
     .directive('magicSearch', function($compile) {
         return {
             restrict: 'E',
@@ -19,7 +19,7 @@ angular.module('MagicSearch', [])
                 $scope.currentSearch = [];
                 $scope.initSearch = function() {
                     // Parse facets JSON and convert to a list of facets.
-                    facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
+                    var facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
                     $scope.facetsObj = JSON.parse(facetsJson);
                     // set facets selected and remove them from facetsObj
                     var initialFacets = window.location.search;
@@ -285,15 +285,22 @@ angular.module('MagicSearch', [])
                 };
                 // showMenu and hideMenu depend on foundation's dropdown. They need
                 // to be modified to work with another dropdown implemenation (i.e. bootstrap)
+                $scope.isOpen = false;
                 $scope.showMenu = function() {
-                    $timeout(function() {
-                        if ($('#facet-drop').hasClass('open') === false) {
-                            $('#search-input').trigger('click');
-                        }
-                    });
+                    $scope.isOpen = true;                        
+                    if($(document).foundation) {
+                        $timeout(function() {
+                            if ($('#facet-drop').hasClass('open') === false) {
+                                $('#search-input').trigger('click');
+                            }
+                        });
+                    }
                 };
                 $scope.hideMenu = function() {
-                    $(document).foundation('dropdown', 'closeall');
+                    $scope.isOpen = false;
+                    if($(document).foundation) {
+                        $(document).foundation('dropdown', 'closeall');
+                    }
                 };
                 $scope.initSearch();
             }
