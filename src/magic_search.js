@@ -19,9 +19,8 @@ angular.module('MagicSearch', [])
                 $scope.currentSearch = [];
                 $scope.initSearch = function() {
                     // Parse facets JSON and convert to a list of facets.
-                    facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
-                    $scope.facetsAll = JSON.parse(facetsJson);  // save a full copy
-                    $scope.facetsObj = JSON.parse(facetsJson);
+                    $scope.facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
+                    $scope.facetsObj = JSON.parse($scope.facetsJson);
                     // set facets selected and remove them from facetsObj
                     var initialFacets = window.location.search;
                     if (initialFacets.indexOf('?') === 0) {
@@ -285,7 +284,7 @@ angular.module('MagicSearch', [])
                 $scope.clearSearch = function() {
                     if ($scope.currentSearch.length > 0) {
                         $scope.currentSearch = [];
-                        $scope.facetsObj = $scope.facetsAll;
+                        $scope.facetsObj = JSON.parse($scope.facetsJson);
                         $scope.resetState();
                         $scope.$emit('searchUpdated', '');
                         $scope.$emit('textSearch', '', $scope.filter_keys);
