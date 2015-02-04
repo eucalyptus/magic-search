@@ -132,7 +132,13 @@ angular.module('MagicSearch', [])
                         $scope.filteredObj = $scope.facetsObj;
                     }
                     else {
-                        $scope.filterFacets(search_val);
+                        if (search_val === '') {
+                            $scope.filteredObj = $scope.facetsObj;
+                            $scope.$emit('textSearch', '', $scope.filter_keys);
+                        }
+                        else {
+                            $scope.filterFacets(search_val);
+                        }
                     }
                 });
                 $('#search-input').on('keypress', function($event) {  // handle character input
