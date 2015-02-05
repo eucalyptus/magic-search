@@ -36,9 +36,9 @@ angular.module('MagicSearch', [])
                         var facetParts = facet.split('=');
                         angular.forEach($scope.facetsObj, function(value, idx) {
                             if (value.name == facetParts[0]) {
-                                if (value.name == 'tags') {
+                                if (value.options === undefined) {
                                     $scope.currentSearch.push({'name':facet, 'label':[value.label, facetParts[1]]});
-                                    // allow tags to stay since we can have multiples
+                                    // allow free-form facets to remain
                                 }
                                 else {
                                     angular.forEach(value.options, function(option, idx) {
@@ -57,6 +57,9 @@ angular.module('MagicSearch', [])
                 $scope.deleteFacetSelection = function(facet_parts) {
                     angular.forEach($scope.facetsObj.slice(), function(facet, idx) {
                         if (facet.name == facet_parts[0]) {
+                            if (facet.options === undefined) {
+                                return;  // allow free-form facets to remain
+                            }
                             for (var i=0; i<facet.options.length; i++) {
                                 var option = facet.options[i];
                                 if (option.key == facet_parts[1]) {
@@ -107,7 +110,7 @@ angular.module('MagicSearch', [])
                     }
                     if (key == 13) {  // enter, so accept value
                         // if tag search, treat as regular facet
-                        if ($scope.facetSelected && $scope.facetSelected.name == 'tags') {
+                        if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
                             var curr = $scope.facetSelected;
                             curr.name = curr.name + '=' + search_val;
                             curr.label[1] = search_val;
@@ -190,7 +193,7 @@ angular.module('MagicSearch', [])
                     }
                     else {  // assume option search
                         $scope.filteredOptions = $scope.facetOptions;
-                        if ($scope.facetOptions === undefined) { // no options, assume free text like w/ tags
+                        if ($scope.facetOptions === undefined) { // no options, assume free form text facet
                             return;
                         }
                         for (i=0; i<$scope.filteredOptions.length; i++) {
@@ -225,7 +228,7 @@ angular.module('MagicSearch', [])
                         label = label.join('');
                     }
                     $scope.facetSelected = {'name':facet.name, 'label':[label, '']};
-                    if (name != 'tags') {
+                    if (facet.options !== undefined) {
                         $scope.filteredOptions = $scope.facetOptions = facet.options;
                         $scope.showMenu();
                     }
@@ -267,9 +270,7 @@ angular.module('MagicSearch', [])
                         $scope.$emit('searchUpdated', query);
                         if ($scope.currentSearch.length > 0) {
                             var newFacet = $scope.currentSearch[$scope.currentSearch.length-1].name;
-                            if (newFacet.indexOf('tags=') !== 0) {
-                                $scope.deleteFacetSelection(newFacet.split('='));
-                            }
+                            $scope.deleteFacetSelection(newFacet.split('='));
                         }
                     }
                 };
