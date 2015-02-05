@@ -58,3 +58,23 @@ Grunt Commands
 
     grunt watch
 
+
+To Release
+==========
+
+pull latest master
+edit package.json to increment version
+::
+
+    git add package.json
+    git commit -m "set version for release"
+    grunt dist
+    git submodule foreach git push origin $branch
+    git push origin $branch
+    
+Then, push tag
+::
+
+    git submodule foreach git push origin <version#>
+    git push origin <version#>
+    
