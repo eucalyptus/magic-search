@@ -68,7 +68,7 @@ edit package.json to increment version
 
     git add package.json
     git commit -m "set version for release"
-    grunt dist
+    grunt release
     git submodule foreach git push origin $branch
     git push origin $branch
     
