@@ -3,7 +3,15 @@
  * @requires AngularJS
  *
  */
-angular.module('MagicSearch', [])
+
+// Allow the module to be pre-defined with additional dependencies
+try{
+    angular.module('MagicSearch');
+} catch (exception) {
+    angular.module('MagicSearch', []);    
+}
+
+angular.module('MagicSearch')
     .directive('magicSearch', function($compile) {
         return {
             restrict: 'E',
