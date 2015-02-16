@@ -18,7 +18,7 @@
                 {{ facetSelected.label[0] }}:
             </span>
             <!-- For bootstrap, the dropdown attribute is moved from input up to div. -->
-            <div id="search-entry" dropdown>
+            <div id="search-entry" dropdown is-open="isMenuOpen">
                 <input id="search-input" type="text" dropdown-toggle
                        placeholder="{{ strings.prompt }}" autocomplete="off"
                        ng-class="{'has-items': currentSearch.length &gt; 0}" />

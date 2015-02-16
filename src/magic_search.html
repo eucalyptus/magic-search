@@ -17,7 +17,7 @@
             <span id="search-selected" class="label" ng-cloak="" ng-show="facetSelected">
                 {{ facetSelected.label[0] }}:
             </span>
-            <div id="search-entry">
+            <div id="search-entry" is-open="isMenuOpen">
                 <input id="search-input" type="text" data-dropdown="facet-drop" dropdown-toggle
                        placeholder="{{ strings.prompt }}" autocomplete="off"
                        ng-class="{'has-items': currentSearch.length &gt; 0}" />
