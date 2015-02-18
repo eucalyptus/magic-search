@@ -134,7 +134,7 @@ angular.module('MagicSearch')
                                     $scope.currentSearch.splice(i, 1);
                                 }
                             }
-                            $scope.currentSearch.push({'name':'text='+search_val, 'label':['text', search_val]});
+                            $scope.currentSearch.push({'name':'text='+search_val, 'label':[$scope.strings['text'], search_val]});
                             $scope.$apply();
                             $scope.hideMenu();
                             $('#search-input').val('');
