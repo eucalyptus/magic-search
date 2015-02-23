@@ -3,7 +3,15 @@
  * @requires AngularJS
  *
  */
-angular.module('MagicSearch', [])
+
+// Allow the module to be pre-defined with additional dependencies
+try{
+    angular.module('MagicSearch');
+} catch (exception) {
+    angular.module('MagicSearch', []);    
+}
+
+angular.module('MagicSearch')
     .directive('magicSearch', function($compile) {
         return {
             restrict: 'E',
@@ -126,7 +134,7 @@ angular.module('MagicSearch', [])
                                     $scope.currentSearch.splice(i, 1);
                                 }
                             }
-                            $scope.currentSearch.push({'name':'text='+search_val, 'label':['text', search_val]});
+                            $scope.currentSearch.push({'name':'text='+search_val, 'label':[$scope.strings['text'], search_val]});
                             $scope.$apply();
                             $scope.hideMenu();
                             $('#search-input').val('');
