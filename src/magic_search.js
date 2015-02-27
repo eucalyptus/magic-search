@@ -16,7 +16,7 @@ angular.module('MagicSearch')
         return {
             restrict: 'E',
             scope: {
-                facets_json: '@facets',
+                facets_param: '@facets',
                 filter_keys: '=filterKeys',
                 strings: '=strings'
             },
@@ -26,9 +26,16 @@ angular.module('MagicSearch')
             controller: function ($scope, $timeout) {
                 $scope.currentSearch = [];
                 $scope.initSearch = function() {
-                    // Parse facets JSON and convert to a list of facets.
-                    $scope.facetsJson = $scope.facets_json.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
-                    $scope.facetsObj = JSON.parse($scope.facetsJson);
+                    if (typeof $scope.facets_param === 'string') {
+                        // Parse facets JSON and convert to a list of facets.
+                        var tmp = $scope.facets_param.replace(/__apos__/g, "\'").replace(/__dquote__/g, '\\"').replace(/__bslash__/g, "\\");
+                        $scope.facetsObj = JSON.parse(tmp);
+                    }
+                    else {
+                        // Assume this is a usable javascript object
+                        $scope.facetsObj = $scope.facets_param;
+                    }
+                    $scope.facetsSave = $scope.copyFacets($scope.facetsObj);
                     // set facets selected and remove them from facetsObj
                     var initialFacets = window.location.search;
                     if (initialFacets.indexOf('?') === 0) {
@@ -61,6 +68,20 @@ angular.module('MagicSearch')
                     });
                     $scope.filteredObj = $scope.facetsObj;
                 };
+                $scope.copyFacets = function(facets) {
+                    var ret = []
+                    for (var i=0; i<facets.length; i++) {
+                        var facet = Object.create(facets[i]);
+                        if (facets[i].options !== undefined) {
+                            facet.options = [];
+                            for (var j=0; j<facets[i].options.length; j++) {
+                                facet.options.push(Object.create(facets[i].options[j]));
+                            }
+                        }
+                        ret.push(facet);
+                    }
+                    return ret;
+                }
                 // removes a facet from the menu
                 $scope.deleteFacetSelection = function(facet_parts) {
                     angular.forEach($scope.facetsObj.slice(), function(facet, idx) {
@@ -313,7 +334,7 @@ angular.module('MagicSearch')
                 $scope.clearSearch = function() {
                     if ($scope.currentSearch.length > 0) {
                         $scope.currentSearch = [];
-                        $scope.facetsObj = JSON.parse($scope.facetsJson);
+                        $scope.facetsObj = $scope.copyFacets($scope.facetsSave);
                         $scope.resetState();
                         $scope.$emit('searchUpdated', '');
                         $scope.$emit('textSearch', '', $scope.filter_keys);
@@ -333,7 +354,7 @@ angular.module('MagicSearch')
                 // to be modified to work with another dropdown implemenation (i.e. bootstrap)
                 $scope.showMenu = function() {
                     $timeout(function() {
-                        if ($('.facet-drop').hasClass('open') === false) {
+                        if ($('#facet-drop').hasClass('open') === false) {
                             $('.search-input').trigger('click');
                         }
                     });
