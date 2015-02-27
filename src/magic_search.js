@@ -80,17 +80,17 @@ angular.module('MagicSearch')
                         }
                     });
                 };
-                $('#search-input').on('keydown', function($event) {  // handle ctrl-char input
+                $('.search-input').on('keydown', function($event) {  // handle ctrl-char input
                     var key = $event.keyCode || $event.charCode;
                     if (key == 9) {  // prevent default when we can.
                         $event.preventDefault();
                     }
                 });
-                $('#search-input').on('keyup', function($event) {  // handle ctrl-char input
+                $('.search-input').on('keyup', function($event) {  // handle ctrl-char input
                     if ($event.metaKey == true) {
                         return;
                     }
-                    var search_val = $('#search-input').val();
+                    var search_val = $('.search-input').val();
                     var key = $event.keyCode || $event.charCode;
                     if (key == 9) {  // tab, so select facet if narrowed down to 1
                         if ($scope.facetSelected === undefined) {
@@ -103,14 +103,14 @@ angular.module('MagicSearch')
                             $scope.resetState();
                         }
                         $timeout(function() {
-                            $('#search-input').val('');
+                            $('.search-input').val('');
                         });
                         return;
                     }
                     if (key == 27) {  // esc, so cancel and reset everthing
                         $timeout(function() {
                             $scope.hideMenu();
-                            $('#search-input').val('');
+                            $('.search-input').val('');
                         });
                         $scope.resetState();
                         $scope.$emit('textSearch', '', $scope.filter_keys);
@@ -137,7 +137,7 @@ angular.module('MagicSearch')
                             $scope.currentSearch.push({'name':'text='+search_val, 'label':[$scope.strings['text'], search_val]});
                             $scope.$apply();
                             $scope.hideMenu();
-                            $('#search-input').val('');
+                            $('.search-input').val('');
                             $scope.$emit('textSearch', search_val, $scope.filter_keys);
                         }
                         $scope.filteredObj = $scope.facetsObj;
@@ -152,8 +152,8 @@ angular.module('MagicSearch')
                         }
                     }
                 });
-                $('#search-input').on('keypress', function($event) {  // handle character input
-                    var search_val = $('#search-input').val();
+                $('.search-input').on('keypress', function($event) {  // handle character input
+                    var search_val = $('.search-input').val();
                     var key = $event.which || $event.keyCode || $event.charCode;
                     if (key != 8 && key != 46 && key != 13 && key != 9 && key != 27) {
                         search_val = search_val + String.fromCharCode(key).toLowerCase();
@@ -161,7 +161,7 @@ angular.module('MagicSearch')
                     if (search_val == ' ') {  // space and field is empty, show menu
                         $scope.showMenu();
                         $timeout(function() {
-                            $('#search-input').val('');
+                            $('.search-input').val('');
                         });
                         return;
                     }
@@ -221,8 +221,8 @@ angular.module('MagicSearch')
                     }
                 };
                 // enable text entry when mouse clicked anywhere in search box
-                $('#search-main-area').on("click", function($event) {
-                    $('#search-input').trigger("focus");
+                $('.search-main-area').on("click", function($event) {
+                    $('.search-input').trigger("focus");
                     if ($scope.facetSelected === undefined) {
                         $scope.showMenu();
                     }
@@ -236,16 +236,19 @@ angular.module('MagicSearch')
                         label = label.join('');
                     }
                     $scope.facetSelected = {'name':facet.name, 'label':[label, '']};
+                    if (facet.singleton== true) {
+                        $scope.facetSelected['singleton'] = true;
+                    }
                     if (facet.options !== undefined) {
                         $scope.filteredOptions = $scope.facetOptions = facet.options;
                         $scope.showMenu();
                     }
                     $timeout(function() {
-                        $('#search-input').val('');
+                        $('.search-input').val('');
                     });
                     $scope.strings['prompt'] = '';
                     $timeout(function() {
-                        $('#search-input').focus();
+                        $('.search-input').focus();
                     });
                 };
                 // when option clicked, complete facet and send event
@@ -258,8 +261,8 @@ angular.module('MagicSearch')
                         curr.label[1] = curr.label[1].join('');
                     }
                     $scope.currentSearch.push(curr);
-                    $scope.resetState();
                     $scope.emitQuery();
+                    $scope.resetState();
                     $scope.showMenu();
                 };
                 // send event with new query string
@@ -278,7 +281,18 @@ angular.module('MagicSearch')
                         $scope.$emit('searchUpdated', query);
                         if ($scope.currentSearch.length > 0) {
                             var newFacet = $scope.currentSearch[$scope.currentSearch.length-1].name;
-                            $scope.deleteFacetSelection(newFacet.split('='));
+                            var facet_parts = newFacet.split('=');
+                            if ($scope.facetSelected.singleton == true) {
+                                // remove entire facet
+                                angular.forEach($scope.facetsObj.slice(), function(facet, idx) {
+                                    if (facet.name == facet_parts[0]) {
+                                        $scope.facetsObj.splice($scope.facetsObj.indexOf(facet), 1);
+                                    }
+                                });
+                            }
+                            else {
+                                $scope.deleteFacetSelection(facet_parts);
+                            }
                         }
                     }
                 };
@@ -291,7 +305,7 @@ angular.module('MagicSearch')
                     }
                     else {
                         $scope.resetState();
-                        $('#search-input').val('');
+                        $('.search-input').val('');
                     }
                     // facet re-enabled by reload
                 };
@@ -309,7 +323,7 @@ angular.module('MagicSearch')
                     return Array.isArray(label);
                 };
                 $scope.resetState = function() {
-                    $('#search-input').val('');
+                    $('.search-input').val('');
                     $scope.filteredObj = $scope.facetsObj;
                     $scope.facetSelected = undefined;
                     $scope.facetOptions = undefined;
@@ -319,8 +333,8 @@ angular.module('MagicSearch')
                 // to be modified to work with another dropdown implemenation (i.e. bootstrap)
                 $scope.showMenu = function() {
                     $timeout(function() {
-                        if ($('#facet-drop').hasClass('open') === false) {
-                            $('#search-input').trigger('click');
+                        if ($('.facet-drop').hasClass('open') === false) {
+                            $('.search-input').trigger('click');
                         }
                     });
                 };

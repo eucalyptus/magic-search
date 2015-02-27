@@ -40,7 +40,7 @@ $itembackground: #e6e7e8;
         top: 0.5rem;
         left: 0.65rem;
     }
-    #search-main-area {
+    .search-main-area {
         position: relative;
         margin-left: 1.65rem;
         margin-right: 1.65rem;
@@ -50,21 +50,24 @@ $itembackground: #e6e7e8;
     .item-list {
         margin-bottom: 2px;
     }
-    #search-selected {
+    .search-selected {
         background-color: $background;
         color: $textcolor;
     }
-    #search-entry {
+    .search-entry {
         display: inline-block;
         height: 1.5rem;
     }
-    #search-input {
+    .search-input {
         width: 220px;
         border: 0;
         box-shadow: none;
         height: 1.5rem;
         padding: 3px;
         background-color: $background;
+        &:focus {
+            box-shadow: none;
+        }
     }
     .match {
         font-weight: bold;
