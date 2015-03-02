@@ -75,6 +75,9 @@ angular.module('MagicSearch')
                             }
                         });
                     });
+                    if ($scope.textSearch !== undefined) {
+                        $scope.currentSearch.push({'name':'text='+$scope.textSearch, 'label':[$scope.strings['text'], $scope.textSearch]});
+                    }
                     $scope.filteredObj = $scope.facetsObj;
                 };
                 $scope.copyFacets = function(facets) {
@@ -151,7 +154,11 @@ angular.module('MagicSearch')
                             $('.search-input').val('');
                         });
                         $scope.resetState();
-                        $scope.$emit('textSearch', '', $scope.filter_keys);
+                        var textFilter = $scope.textSearch;
+                        if (textFilter === undefined) {
+                            textFilter = '';
+                        }
+                        $scope.$emit('textSearch', textFilter, $scope.filter_keys);
                         return;
                     }
                     if (key == 13) {  // enter, so accept value
@@ -177,6 +184,7 @@ angular.module('MagicSearch')
                             $scope.hideMenu();
                             $('.search-input').val('');
                             $scope.$emit('textSearch', searchVal, $scope.filter_keys);
+                            $scope.textSearch = searchVal;
                         }
                         $scope.filteredObj = $scope.facetsObj;
                     }
@@ -311,6 +319,7 @@ angular.module('MagicSearch')
                     }
                     if (removed !== undefined && removed.indexOf('text') === 0) {
                         $scope.$emit('textSearch', '', $scope.filter_keys);
+                        $scope.textSearch = undefined
                     }
                     else {
                         $scope.$emit('searchUpdated', query);
