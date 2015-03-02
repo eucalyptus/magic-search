@@ -37,6 +37,9 @@ angular.module('MagicSearch')
                         $scope.facetsObj = $scope.facets_param;
                     }
                     $scope.facetsSave = $scope.copyFacets($scope.facetsObj);
+                    $scope.initFacets();
+                };
+                $scope.initFacets = function() {
                     // set facets selected and remove them from facetsObj
                     var initialFacets = window.location.search;
                     if (initialFacets.indexOf('?') === 0) {
@@ -158,8 +161,8 @@ angular.module('MagicSearch')
                             curr.name = curr.name + '=' + searchVal;
                             curr.label[1] = searchVal;
                             $scope.currentSearch.push(curr);
-                            $scope.emitQuery();
                             $scope.resetState();
+                            $scope.emitQuery();
                             $scope.showMenu();
                         }
                         // if text search treat as search
@@ -271,9 +274,6 @@ angular.module('MagicSearch')
                         label = label.join('');
                     }
                     $scope.facetSelected = {'name':facet.name, 'label':[label, '']};
-                    if (facet.singleton === true) {
-                        $scope.facetSelected['singleton'] = true;
-                    }
                     if (facet.options !== undefined) {
                         $scope.filteredOptions = $scope.facetOptions = facet.options;
                         $scope.showMenu();
@@ -296,8 +296,8 @@ angular.module('MagicSearch')
                         curr.label[1] = curr.label[1].join('');
                     }
                     $scope.currentSearch.push(curr);
-                    $scope.emitQuery();
                     $scope.resetState();
+                    $scope.emitQuery();
                     $scope.showMenu();
                 };
                 // send event with new query string
@@ -317,12 +317,16 @@ angular.module('MagicSearch')
                         if ($scope.currentSearch.length > 0) {
                             var newFacet = $scope.currentSearch[$scope.currentSearch.length-1].name;
                             var facetParts = newFacet.split('=');
-                            if ($scope.facetSelected.singleton === true) {
-                                $scope.deleteFacetEntirely(facetParts);
-                            }
-                            else {
-                                $scope.deleteFacetSelection(facetParts);
-                            }
+                            angular.forEach($scope.facetsSave, function(facet, idx) {
+                                if (facet.name == facetParts[0]) {
+                                    if (facet.singleton === true) {
+                                        $scope.deleteFacetEntirely(facetParts);
+                                    }
+                                    else {
+                                        $scope.deleteFacetSelection(facetParts);
+                                    }
+                                }
+                            });
                         }
                     }
                 };
@@ -340,7 +344,10 @@ angular.module('MagicSearch')
                     if ($scope.currentSearch.length == 0) {
                         $scope.strings['prompt'] = $scope.promptString;
                     }
-                    // facet re-enabled by reload
+                    // re-init to restore facets cleanly
+                    $scope.facetsObj = $scope.copyFacets($scope.facetsSave);
+                    $scope.currentSearch = [];
+                    $scope.initFacets();
                 };
                 // clear entire searchbar
                 $scope.clearSearch = function() {
