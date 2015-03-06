@@ -30,6 +30,17 @@ module.exports = function(grunt) {
               tasks: ['compass']
           }
       },
+      uglify: {
+          minify: {
+              options: {
+                  mangle: false
+              },
+              files: {
+                  'dist/magic_search.min.js': ['src/magic_search.js'],
+                  'dist/magic_search_bootstrap.min.js': ['src/magic_search_bootstrap.js']
+              }
+          }
+      },
       copy: {
           dist: {
               cwd: './src/',
@@ -45,8 +56,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   
-  grunt.registerTask('dist', ['compass', 'copy']);
+  grunt.registerTask('dist', ['compass', 'copy', 'uglify']);
   grunt.registerTask('default', ['dist']);
 
   function run(cmd, msg){
