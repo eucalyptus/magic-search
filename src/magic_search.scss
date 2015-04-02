@@ -3,6 +3,7 @@
 /*-----------------------------------------
    Colors
   ----------------------------------------- */
+$bordercolor: #6a737b;
 $textcolor: #444;
 $background: white;
 $itembackground: #e6e7e8;
@@ -29,15 +30,15 @@ $itembackground: #e6e7e8;
   ----------------------------------------- */
 .search-bar {
     position: relative;
-    border: 1px solid black;
+    border: 1px solid $bordercolor;
     background-color: $background;
     margin-bottom: 0.5rem;
     padding: 4px;
     height: auto;
     i.fi-filter {
-        color: $textcolor;
+        color: $bordercolor;
         position: absolute;
-        top: 0.5rem;
+        top: 0.35rem;
         left: 0.65rem;
     }
     .search-main-area {
@@ -73,7 +74,7 @@ $itembackground: #e6e7e8;
         font-weight: bold;
     }
     i.cancel {
-        color: $textcolor;
+        color: $bordercolor;
         &:hover {
             color: darkred;
         }
