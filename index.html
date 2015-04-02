@@ -3,11 +3,18 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link rel="shortcut icon" href="https://www.eucalyptus.com/sites/all/themes/euca/favicon.ico" type="image/vnd.microsoft.icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <link rel="stylesheet" href="stylesheets/deps/foundation.css" type="text/css" media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="stylesheets/deps/foundation-icons.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script src="javascripts/deps/jquery-2.0.3.min.js"></script>
+    <script src="javascripts/deps/angular.min.js"></script>
+    <script src="javascripts/deps/modernizr.js"></script>
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -34,6 +41,26 @@
 <p>This is an AngularJS widget that provides a UI for faceted and text search. There's a little more history and motivation provided in this <a href="http://coderslike.us/2015/01/07/magic-search-facets-and-text-in-a-single-widget-for-efficient-search-ux/">blog post</a>. Also, &quot;bower info angular-magic-search&quot; provides current package information.</p>
 
 <h3>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h3>
+<link rel="stylesheet" type-"text/css" href="dist/magic_search.css"/>
+<script src="dist/magic_search.js"></script>
+<div ng-app="Demo" ng-controller="DemoCtrl" ng-init="init()">
+    <div ng-app="MagicSearch">
+        <magic-search template="dist/magic_search.html"
+            facets='[{"name":"type", "label":"Type", "options":[{"key":"baked", "label":"Baked"}, {"key":"cold", "label":"Cold"}]}]'
+            filter-keys='["name"]'
+            strings="{'remove':'Remove facet', 'cancel':'Clear search', 'prompt':'Select facets or enter text', 'text':'Text'}">
+        </magic-search>
+    </div>
+    <br/>
+    <strong>Search Results</strong>
+    <span ng-show="filtered_data.length == 0"> - none</span>
+    <ul>
+        <li ng-repeat="item in filtered_data">{{item.name}}</li>
+    </ul>
+</div>
+
+<h3>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h3>
 
 <p>To use magic-search in your application, you're free to click one of the download links, or clone the repo. If you are already using Bower, you can simply add “angular-magic-search” to your bower.json.</p>
@@ -47,11 +74,6 @@
 &lt;/div&gt;
 </pre>
 <p>More details on integration are found in <a href="http://coderslike.us/2015/01/27/working-with-magic-search-from-bower/">this post</a>.</p>
-
-<h3>
-<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h3>
-
-<p>Coming soon!</p>
 
 <h3>
 <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
@@ -79,5 +101,10 @@
     </div>
 
   
+    <script src="javascripts/deps/foundation.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
   </body>
 </html>
