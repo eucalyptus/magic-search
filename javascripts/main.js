@@ -11,6 +11,12 @@ angular.module('Demo', ['MagicSearch'])
         $scope.filtered_data = [];
         $scope.init = function() {
             $scope.filtered_data = $scope.data_set;
+            // since we're not getting data from the server, do a client-filter based on URL
+            var query = window.location.href;
+            if (query.indexOf("?") > -1) {
+                query = query.split("?")[1];
+                $scope.$emit('searchUpdated', query);
+            }
         };
         $scope.$on('searchUpdated', function($event, query) {
             // update url
