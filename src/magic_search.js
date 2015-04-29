@@ -220,6 +220,9 @@ angular.module('MagicSearch')
                     if (searchVal === '') {
                         $scope.filteredObj = $scope.facetsObj;
                         $scope.$emit('textSearch', '', $scope.filter_keys);
+                        if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
+                            $scope.resetState();
+                        }
                         return;
                     }
                     if (key != 8 && key != 46) {
@@ -331,6 +334,7 @@ angular.module('MagicSearch')
                     else {
                         $scope.$emit('searchUpdated', query);
                         if ($scope.currentSearch.length > 0) {
+                            // prune facets as needed from menus
                             var newFacet = $scope.currentSearch[$scope.currentSearch.length-1].name;
                             var facetParts = newFacet.split('=');
                             angular.forEach($scope.facetsSave, function(facet, idx) {
@@ -392,7 +396,7 @@ angular.module('MagicSearch')
                 // to be modified to work with another dropdown implemenation (i.e. bootstrap)
                 $scope.showMenu = function() {
                     $timeout(function() {
-                        if ($('#facet-drop').hasClass('open') === false) {
+                        if ($('#facet-drop').hasClass('open') === false && $scope.filteredObj.length > 0) {
                             $('.search-input').trigger('click');
                         }
                     });

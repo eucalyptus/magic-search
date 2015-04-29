@@ -1,5 +1,5 @@
 <!--! Magic Searchbar -->
-<div class="magic-search" magic-overrides>
+<div class="magic-search" magic-overrides="">
     <div class="search-bar">
         <i class="fi-filter go"></i>
         <div class="search-main-area">
@@ -18,7 +18,7 @@
                 {{ facetSelected.label[0] }}:
             </span>
             <div class="search-entry" is-open="isMenuOpen">
-                <input class="search-input" type="text" data-dropdown="facet-drop" dropdown-toggle
+                <input class="search-input" type="text" data-dropdown="facet-drop" dropdown-toggle=""
                        placeholder="{{ strings.prompt }}" autocomplete="off" />
                 <ul id="facet-drop" class="f-dropdown dropdown-menu" data-dropdown-content="">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
@@ -38,6 +38,7 @@
                            ng-show="isMatchLabel(option.label)">
                            {{ option.label[0] }}<span class="match">{{ option.label[1] }}</span>{{ option.label[2] }}
                         </a>
+                    </li>
                 </ul>
             </div>
         </div>
