@@ -8,7 +8,8 @@ angular.module('Demo', ['MagicSearch'])
             {'name':'pudding', 'type':'cold'},
             {'name':'ice cream', 'type':'cold'}
         ];
-        $scope.filtered_data = [];
+        $scope.faceted_data = [];   // filterd by facets
+        $scope.filtered_data = [];  // filtered by facets and text
         $scope.init = function() {
             $scope.faceted_data = $scope.data_set;
             $scope.filtered_data = $scope.data_set;
@@ -21,6 +22,25 @@ angular.module('Demo', ['MagicSearch'])
             $timeout(function() {
                 $(document).foundation('dropdown', 'reflow');
             }, 500);
+            $scope.watch('faceted_data', function() {
+                //$scope.filter_items();
+            });
+        };
+        $scope.filter_items = function() {
+            if ($scope.filter_text === undefined || $scope.filter_text === '') {
+                $scope.filtered_data = $scope.faceted_data.slice();
+                return;
+            }
+            $scope.filtered_data = $scope.faceted_data.filter(function(item) {
+                for (var i=0; i<$scope.filter_keys.length; i++) {
+                    var prop = $scope.filter_keys[i];
+                    var val = item.hasOwnProperty(prop) && item[prop];
+                    if (val.toLowerCase().indexOf($scope.filter_text) !== -1) {
+                        return item;
+                    }
+                }
+            });
+            $timeout(function () { $scope.$apply() });
         };
         $scope.$on('searchUpdated', function($event, query) {
             // update url
@@ -48,16 +68,9 @@ angular.module('Demo', ['MagicSearch'])
             $timeout(function () { $scope.$apply() });
         });
         $scope.$on('textSearch', function($event, text, filter_keys) {
-            $scope.filtered_data = $scope.faceted_data.filter(function(item) {
-                for (var i=0; i<filter_keys.length; i++) {
-                    var prop = filter_keys[i];
-                    var val = item.hasOwnProperty(prop) && item[prop];
-                    if (val.toLowerCase().indexOf(text) !== -1) {
-                        return item;
-                    }
-                }
-            });
-            $timeout(function () { $scope.$apply() });
+            $scope.filter_text = text;
+            $scope.filter_keys = filter_keys;
+            $scope.filter_items();
         });
     })
 ;
