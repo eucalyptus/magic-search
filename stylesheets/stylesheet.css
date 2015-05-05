@@ -507,6 +507,10 @@ aside#sidebar {
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
 }
 
+.search-input, .search-input::before, .search-input::after {
+    box-sizing: border-box !important;
+}
+
 .item, .item::before, .item::after {
     box-sizing: border-box !important;
 }
