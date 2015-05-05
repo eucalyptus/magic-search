@@ -507,6 +507,10 @@ aside#sidebar {
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
 }
 
+.button:hover, .button:focus {
+    background-color: transparent !important;
+}
+
 .search-input, .search-input::before, .search-input::after {
     box-sizing: border-box !important;
 }
