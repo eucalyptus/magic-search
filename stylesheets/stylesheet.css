@@ -507,8 +507,12 @@ aside#sidebar {
   background: transparent url(../images/sidebar-bg.jpg) 0 0 no-repeat;
 }
 
+.item, .item::before, .item::after {
+    box-sizing: border-box !important;
+}
+
 *, *::before, *::after {
-    box-sizing: initial !important;
+    box-sizing: inherit !important;
 }
 
 aside#sidebar p.repo-owner,
