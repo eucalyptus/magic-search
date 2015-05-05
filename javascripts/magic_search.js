@@ -127,7 +127,7 @@ angular.module('MagicSearch')
                         }
                     });
                 };
-                $('.search-input').on('keydown', function($event) {  // handle ctrl-char input
+                $('.search-input').on('keydown', function($event) {
                     var key = $event.keyCode || $event.charCode;
                     if (key == 9) {  // prevent default when we can.
                         $event.preventDefault();
@@ -198,6 +198,9 @@ angular.module('MagicSearch')
                         if (searchVal === '') {
                             $scope.filteredObj = $scope.facetsObj;
                             $scope.$emit('textSearch', '', $scope.filter_keys);
+                            if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
+                                $scope.resetState();
+                            }
                         }
                         else {
                             $scope.filterFacets(searchVal);

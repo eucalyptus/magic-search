@@ -45,19 +45,17 @@
 <a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h3>
 <link rel="stylesheet" type="text/css" href="stylesheets/magic_search.css"/>
 <script src="javascripts/magic_search.js"></script>
-<div ng-app="Demo" ng-controller="DemoCtrl" ng-init="init()">
-    <div ng-app="MagicSearch">
-        <magic-search template="magic_search.html"
-            facets='[{"name":"type", "label":"Type", "options":[{"key":"baked", "label":"Baked"}, {"key":"cold", "label":"Cold"}]}]'
-            filter-keys='["name"]'
-            strings="{'remove':'Remove facet', 'cancel':'Clear search', 'prompt':'Select facets or enter text', 'text':'Text'}">
-        </magic-search>
-    </div>
+<div ng-app="Demo" ng-controller="DemoCtrl as demoCtrl" ng-init="demoCtrl.init()">
+    <magic-search template="magic_search.html"
+        facets='[{"name":"type", "label":"Type", "options":[{"key":"baked", "label":"Baked"}, {"key":"cold", "label":"Cold"}]}]'
+        filter-keys='["name"]'
+        strings="{'remove':'Remove facet', 'cancel':'Clear search', 'prompt':'Select facets or enter text', 'text':'Text'}">
+    </magic-search>
     <br/>
     <strong>Search Results</strong>
-    <span ng-show="filtered_data.length == 0"> - none</span>
+    <span ng-show="demoCtrl.filtered_data.length == 0"> - none</span>
     <ul>
-        <li ng-repeat="item in filtered_data">{{item.name}}</li>
+        <li ng-repeat="item in demoCtrl.filtered_data">{{item.name}}</li>
     </ul>
 </div>
 
@@ -67,12 +65,10 @@
 <p>To use magic-search in your application, you're free to click one of the download links, or clone the repo. If you are already using Bower, you can simply add “angular-magic-search” to your bower.json.</p>
 <p>In your application, you'll need to import the css and javascript, then you can use the component like this.</p>
 <pre>
-&lt;div ng-app="MagicSearch"&gt;
- &lt;magic-search
+&lt;magic-search
   template="${request.static_path('eucaconsole:static/js/thirdparty/magic-search/magic_search.html')}"
   strings="{'remove':'Remove facet', 'cancel':'Clear search', 'prompt':'Select facets or enter text', 'text':'Text'}"
   facets="${search_facets}" filter-keys="${filter_keys}"&gt;&lt;/magic-search&gt;
-&lt;/div&gt;
 </pre>
 <p>More details on integration are found in <a href="http://coderslike.us/2015/01/27/working-with-magic-search-from-bower/">this post</a>.</p>
 
