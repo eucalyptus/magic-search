@@ -54,6 +54,7 @@
     <br/>
     <strong>Search Results</strong>
     <span ng-show="demoCtrl.filtered_data.length == 0"> - none</span>
+    <span ng-show="demoCtrl.filtered_data.length > 0"> ({{ demoCtrl.filtered_data.length }} items)</span>
     <ul>
         <li ng-repeat="item in demoCtrl.filtered_data | orderBy:'name'">{{item.name}}</li>
     </ul>

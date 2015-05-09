@@ -404,27 +404,31 @@ angular.module('Demo', ['MagicSearch'])
             }
             window.history.pushState(query, "", url);
             // normally, you would use an XHR call to get new "data_set", but we'll filter client-side for the demo
-            // prepare facets by grouping
-            var tmp = query.split('&').sort();
-            var facets = {};
-            for (var i=0; i<tmp.length; i++) {
-                var facet = tmp[i].split('=');
-                if (facets[facet[0]] === undefined) {
-                    facets[facet[0]] = [];
-                }
-                facets[facet[0]].push(facet[1]);
-            }
-            var results = vm.data_set;
-            for (var key in facets) {
-                results = results.filter(function(item) {
-                    var val = item.hasOwnProperty(key) && item[key];
-                    if ($.inArray(val.toLowerCase(), facets[key]) > -1) {
-                        return true;
+            if (query !== undefined && query.length !== 0) {
+                // prepare facets by grouping
+                var tmp = query.split('&').sort();
+                var facets = {};
+                for (var i=0; i<tmp.length; i++) {
+                    var facet = tmp[i].split('=');
+                    if (facets[facet[0]] === undefined) {
+                        facets[facet[0]] = [];
                     }
-                });
+                    facets[facet[0]].push(facet[1]);
+                }
+                var results = vm.data_set;
+                for (var key in facets) {
+                    results = results.filter(function(item) {
+                        var val = item.hasOwnProperty(key) && item[key];
+                        if ($.inArray(val.toLowerCase(), facets[key]) > -1) {
+                            return true;
+                        }
+                    });
+                }
+                vm.faceted_data = results;
             }
-            vm.faceted_data = results;
-            vm.faceted_data.slice();
+            else {
+                vm.faceted_data = vm.data_set.slice();
+            }
             vm.filter_items();
             $timeout(function () { $scope.$apply() });
         });
