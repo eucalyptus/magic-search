@@ -19,6 +19,7 @@ angular.module('Demo', ['MagicSearch'])
                  {"key":"solitude", "label":"Solitude"},
                  {"key":"whiterun", "label":"Whiterun"},
                  {"key":"windhelm", "label":"Windhelm"},
+                 {"key":"winterhold", "label":"Winterhold"},
                  {"key":"dawnstar", "label":"Dawnstar"},
                  {"key":"morthal", "label":"Morthal"},
                  {"key":"riften", "label":"Riften"},
