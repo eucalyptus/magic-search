@@ -197,6 +197,7 @@ angular.module('MagicSearch')
                     else {
                         if (searchVal === '') {
                             $scope.filteredObj = $scope.facetsObj;
+                            $scope.$apply();
                             $scope.$emit('textSearch', '', $scope.filter_keys);
                             if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
                                 $scope.resetState();
@@ -222,6 +223,7 @@ angular.module('MagicSearch')
                     }
                     if (searchVal === '') {
                         $scope.filteredObj = $scope.facetsObj;
+                        $scope.$apply();
                         $scope.$emit('textSearch', '', $scope.filter_keys);
                         if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
                             $scope.resetState();
