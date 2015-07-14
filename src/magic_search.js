@@ -401,10 +401,9 @@ angular.module('MagicSearch')
                 // showMenu and hideMenu depend on foundation's dropdown. They need
                 // to be modified to work with another dropdown implemenation (i.e. bootstrap)
                 $scope.showMenu = function() {
-                    var facetDrop = $element.find('#facet-drop');
                     $timeout(function() {
-                        if (facetDrop.hasClass('open') === false && $scope.filteredObj.length > 0) {
-                            searchInput.trigger('click');
+                        if ($('#facet-drop').hasClass('open') === false && $scope.filteredObj.length > 0) {
+                            $('.search-input').trigger('click');
                         }
                     });
                 };
