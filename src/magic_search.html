@@ -20,7 +20,7 @@
             <div class="search-entry" is-open="isMenuOpen">
                 <input class="search-input" type="text" data-dropdown="facet-drop" dropdown-toggle=""
                        placeholder="{{ strings.prompt }}" autocomplete="off" />
-                <ul id="facet-drop" class="f-dropdown dropdown-menu" data-dropdown-content="">
+                <ul id="facet-drop" class="f-dropdown dropdown-menu" data-dropdown-content="" ng-show="filteredObj.length > 0">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
                         <a ng-click="facetClicked($index, $event, facet.name)"
                            ng-show="!isMatchLabel(facet.label)">{{ facet.label }}</a>
