@@ -27,6 +27,13 @@ angular.module('MagicSearch')
                 var searchInput = $element.find('.search-input');
                 $scope.promptString = $scope.strings.prompt;
                 $scope.currentSearch = [];
+                $scope.inputVal = function(val) {
+                    if(typeof val !== 'undefined') {
+                        searchInput.is('input') ? searchInput.val(val) : searchInput.text(val);
+                    } else {
+                        return searchInput.is('input') ? searchInput.val() : searchInput.text();
+                    }
+                };
                 $scope.initSearch = function() {
                     if (typeof $scope.facets_param === 'string') {
                         // Parse facets JSON and convert to a list of facets.
@@ -138,7 +145,7 @@ angular.module('MagicSearch')
                     if ($event.metaKey === true) {
                         return;
                     }
-                    var searchVal = searchInput.val();
+                    var searchVal = $scope.inputVal();
                     var key = $event.keyCode || $event.charCode;
                     if (key == 9) {  // tab, so select facet if narrowed down to 1
                         if ($scope.facetSelected === undefined) {
@@ -151,14 +158,14 @@ angular.module('MagicSearch')
                             $scope.resetState();
                         }
                         $timeout(function() {
-                            searchInput.val('');
+                            $scope.inputVal('');
                         });
                         return;
                     }
                     if (key == 27) {  // esc, so cancel and reset everthing
                         $timeout(function() {
                             $scope.hideMenu();
-                            searchInput.val('');
+                            $scope.inputVal('');
                         });
                         $scope.resetState();
                         var textFilter = $scope.textSearch;
@@ -189,7 +196,7 @@ angular.module('MagicSearch')
                             $scope.currentSearch.push({'name':'text='+searchVal, 'label':[$scope.strings.text, searchVal]});
                             $scope.$apply();
                             $scope.hideMenu();
-                            searchInput.val('');
+                            $scope.inputVal('');
                             $scope.$emit('textSearch', searchVal, $scope.filter_keys);
                             $scope.textSearch = searchVal;
                         }
@@ -210,7 +217,7 @@ angular.module('MagicSearch')
                     }
                 });
                 searchInput.on('keypress', function($event) {  // handle character input
-                    var searchVal = searchInput.val();
+                    var searchVal = $scope.inputVal();
                     var key = $event.which || $event.keyCode || $event.charCode;
                     if (key != 8 && key != 46 && key != 13 && key != 9 && key != 27) {
                         searchVal = searchVal + String.fromCharCode(key).toLowerCase();
@@ -218,7 +225,7 @@ angular.module('MagicSearch')
                     if (searchVal == ' ') {  // space and field is empty, show menu
                         $scope.showMenu();
                         $timeout(function() {
-                            searchInput.val('');
+                            $scope.inputVal('');
                         });
                         return;
                     }
@@ -303,7 +310,7 @@ angular.module('MagicSearch')
                         $scope.showMenu();
                     }
                     $timeout(function() {
-                        searchInput.val('');
+                        $scope.inputVal('');
                     });
                     $scope.strings.prompt = '';
                     $timeout(function() {
@@ -365,7 +372,7 @@ angular.module('MagicSearch')
                     }
                     else {
                         $scope.resetState();
-                        searchInput.val('');
+                        $scope.inputVal('');
                     }
                     if ($scope.currentSearch.length === 0) {
                         $scope.strings.prompt = $scope.promptString;
@@ -389,7 +396,7 @@ angular.module('MagicSearch')
                     return Array.isArray(label);
                 };
                 $scope.resetState = function() {
-                    searchInput.val('');
+                    $scope.inputVal('');
                     $scope.filteredObj = $scope.facetsObj;
                     $scope.facetSelected = undefined;
                     $scope.facetOptions = undefined;
