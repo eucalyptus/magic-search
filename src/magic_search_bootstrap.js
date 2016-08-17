@@ -28,7 +28,6 @@ angular.module('MagicSearch', ['ui.bootstrap'])
                     $scope.currentSearch = [];
                     $scope.initSearch();
                 });
-
             }
         };
     });
