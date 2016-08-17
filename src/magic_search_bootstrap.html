@@ -18,8 +18,8 @@
                 {{ facetSelected.label[0] }}:
             </span>
             <!-- For bootstrap, the dropdown attribute is moved from input up to div. -->
-            <div class="search-entry" dropdown="" is-open="isMenuOpen">
-                <input class="search-input" type="text" dropdown-toggle=""
+            <div class="search-entry" uib-dropdown is-open="isMenuOpen">
+                <input class="search-input" type="text" uib-dropdown-toggle
                        placeholder="{{ strings.prompt }}" autocomplete="off">
                 <ul class="facet-drop f-dropdown dropdown-menu" data-dropdown-content="">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
