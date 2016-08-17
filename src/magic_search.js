@@ -40,6 +40,20 @@ angular.module('MagicSearch')
                     $scope.facetsSave = $scope.copyFacets($scope.facetsObj);
                     $scope.initFacets();
                 };
+                $scope.syncCurrentSearchToUrl = function() {
+                    var facetsInUrl = angular.copy($location.search());
+                    $scope.currentSearch.forEach(facet => {
+                        var facetParts = facet.name.split('='),
+                            facetName = facetParts[0],
+                            facetValue = facetParts[1];
+
+                        if (!facetsInUrl[facetName]) {
+                            facetsInUrl[facetName] = facetValue;
+                        }
+                    });
+
+                    $location.search(facetsInUrl).replace();
+                };
                 $scope.initFacets = function() {
                     // set facets selected and remove them from facetsObj
                     var initialFacets = $location.search();
@@ -190,6 +204,7 @@ angular.module('MagicSearch')
                             $scope.textSearch = searchVal;
                         }
                         $scope.filteredObj = $scope.facetsObj;
+                        $scope.syncCurrentSearchToUrl();
                     }
                     else {
                         if (searchVal === '') {
@@ -317,6 +332,7 @@ angular.module('MagicSearch')
                         curr.label[1] = curr.label[1].join('');
                     }
                     $scope.currentSearch.push(curr);
+                    $scope.syncCurrentSearchToUrl();
                     $scope.resetState();
                     $scope.emitQuery();
                     $scope.showMenu($event);
@@ -369,6 +385,10 @@ angular.module('MagicSearch')
                     if ($scope.currentSearch.length === 0) {
                         $scope.strings.prompt = $scope.promptString;
                     }
+
+                    // remove facet from url before refreshing facets
+                    $location.search(removed, undefined).replace();
+
                     // re-init to restore facets cleanly
                     $scope.facetsObj = $scope.copyFacets($scope.facetsSave);
                     $scope.currentSearch = [];
