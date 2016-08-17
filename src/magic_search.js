@@ -23,7 +23,7 @@ angular.module('MagicSearch')
             templateUrl: function (scope, elem) {
                 return elem.template;
             },
-            controller: function ($scope, $element, $timeout) {
+            controller: function ($scope, $element, $timeout, $location) {
                 var searchInput = $element.find('.search-input');
                 $scope.promptString = $scope.strings.prompt;
                 $scope.currentSearch = [];
@@ -42,33 +42,29 @@ angular.module('MagicSearch')
                 };
                 $scope.initFacets = function() {
                     // set facets selected and remove them from facetsObj
-                    var initialFacets = window.location.search;
-                    if (initialFacets.indexOf('?') === 0) {
-                        initialFacets = initialFacets.slice(1);
-                    }
-                    initialFacets = initialFacets.split('&');
-                    if (initialFacets.length > 1 || initialFacets[0].length > 0) {
+                    var initialFacets = $location.search();
+                    if (Object.keys(initialFacets).length > 0) {
                         $timeout(function() {
                             $scope.strings.prompt = '';
                         });
                     }
-                    angular.forEach(initialFacets, function(facet, idx) {
-                        var facetParts = facet.split('=');
+                    angular.forEach(Object.keys(initialFacets), function(facetName, idx) {
+                        var facetValue = initialFacets[facetName];
                         angular.forEach($scope.facetsObj, function(value, idx) {
-                            if (value.name == facetParts[0]) {
+                            if (value.name == facetName) {
                                 if (value.options === undefined) {
-                                    $scope.currentSearch.push({'name':facet, 'label':[value.label, facetParts[1]]});
+                                    $scope.currentSearch.push({'name':facetName, 'label':[value.label, facetValue]});
                                     // allow free-form facets to remain
                                 }
                                 else {
                                     angular.forEach(value.options, function(option, idx) {
-                                        if (option.key == facetParts[1]) {
-                                            $scope.currentSearch.push({'name':facet, 'label':[value.label, option.label]});
+                                        if (option.key == facetValue) {
+                                            $scope.currentSearch.push({'name':facetName, 'label':[value.label, option.label]});
                                             if (value.singleton === true) {
-                                                $scope.deleteFacetEntirely(facetParts);
+                                                $scope.deleteFacetEntirely([facetName, facetValue]);
                                             }
                                             else {
-                                                $scope.deleteFacetSelection(facetParts);
+                                                $scope.deleteFacetSelection([facetName, facetValue]);
                                             }
                                         }
                                     });
