@@ -6,10 +6,16 @@ angular.module('MagicSearch', ['ui.bootstrap'])
                 // showMenu and hideMenu depend on foundation's dropdown. They need
                 // to be modified to work with another dropdown implemenation.
                 // For bootstrap, they are not needed at all.
-                $scope.showMenu = function() {
+                $scope.showMenu = function($event) {
+                    if ($event) {
+                        $event.stopPropagation();
+                    }
                     $scope.isMenuOpen = true;
                 };
-                $scope.hideMenu = function() {
+                $scope.hideMenu = function($event) {
+                    if ($event) {
+                        $event.stopPropagation();
+                    }
                     $scope.isMenuOpen = false;
                 };
                 $scope.isMenuOpen = false;
