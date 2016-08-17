@@ -188,6 +188,7 @@ angular.module('MagicSearch')
                             $scope.resetState();
                             $scope.emitQuery();
                             $scope.showMenu($event);
+                            $scope.$apply();
                         }
                         // if text search treat as search
                         else {
