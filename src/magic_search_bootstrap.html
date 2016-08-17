@@ -7,7 +7,7 @@
                 <span class="label radius secondary item"
                       ng-repeat="facet in currentSearch" ng-cloak="cloak">
                     <span>
-                        {{ facet.label[0] }}:<b>{{ facet.label[1] }}</b>
+                        {{ facet.nameLabel }}:<b>{{ facet.valueLabel || facet.value }}</b>
                     </span>
                     <a class="remove" ng-click="removeFacet($index, $event)" title="{{ strings.remove }}">
                         <i class="fa fa-times"></i>

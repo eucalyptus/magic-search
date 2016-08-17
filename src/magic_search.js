@@ -43,12 +43,8 @@ angular.module('MagicSearch')
                 $scope.syncCurrentSearchToUrl = function() {
                     var facetsInUrl = angular.copy($location.search());
                     $scope.currentSearch.forEach(facet => {
-                        var facetParts = facet.name.split('='),
-                            facetName = facetParts[0],
-                            facetValue = facetParts[1];
-
-                        if (!facetsInUrl[facetName]) {
-                            facetsInUrl[facetName] = facetValue;
+                        if (!facetsInUrl[facet.name]) {
+                            facetsInUrl[facet.name] = facet.value;
                         }
                     });
 
@@ -56,29 +52,42 @@ angular.module('MagicSearch')
                 };
                 $scope.initFacets = function() {
                     // set facets selected and remove them from facetsObj
-                    var initialFacets = $location.search();
-                    if (Object.keys(initialFacets).length > 0) {
+                    var urlParams = $location.search();
+                    if (Object.keys(urlParams).length > 0) {
                         $timeout(function() {
                             $scope.strings.prompt = '';
                         });
                     }
-                    angular.forEach(Object.keys(initialFacets), function(facetName, idx) {
-                        var facetValue = initialFacets[facetName];
-                        angular.forEach($scope.facetsObj, function(value, idx) {
-                            if (value.name == facetName) {
-                                if (value.options === undefined) {
-                                    $scope.currentSearch.push({'name':facetName, 'label':[value.label, facetValue]});
+                    angular.forEach(Object.keys(urlParams), function(urlParam, idx) {
+                        var urlValue = urlParams[urlParam];
+                        angular.forEach($scope.facetsObj, function(facet, idx) {
+                            if (facet.name == urlParam) {
+                                if (facet.options === undefined) {
+
+                                    $scope.currentSearch.push({
+                                        name: facet.name,
+                                        nameLabel: facet.label,
+                                        value: urlValue
+                                    });
+
                                     // allow free-form facets to remain
                                 }
                                 else {
-                                    angular.forEach(value.options, function(option, idx) {
-                                        if (option.key == facetValue) {
-                                            $scope.currentSearch.push({'name':facetName, 'label':[value.label, option.label]});
-                                            if (value.singleton === true) {
-                                                $scope.deleteFacetEntirely([facetName, facetValue]);
+                                    angular.forEach(facet.options, function(option, idx) {
+                                        if (option.key == urlValue) {
+
+                                            $scope.currentSearch.push({
+                                                name: facet.name,
+                                                nameLabel: facet.label,
+                                                value: urlValue,
+                                                valueLabel: option.label
+                                            });
+
+                                            if (facet.singleton === true) {
+                                                $scope.deleteFacetEntirely(facet.name);
                                             }
                                             else {
-                                                $scope.deleteFacetSelection([facetName, facetValue]);
+                                                $scope.deleteFacetSelection(facet.name, urlValue);
                                             }
                                         }
                                     });
@@ -87,7 +96,12 @@ angular.module('MagicSearch')
                         });
                     });
                     if ($scope.textSearch !== undefined) {
-                        $scope.currentSearch.push({'name':'text='+$scope.textSearch, 'label':[$scope.strings.text, $scope.textSearch]});
+
+                        $scope.currentSearch.push({
+                            name: 'text',
+                            nameLabel: $scope.strings.text,
+                            value: $scope.textSearch
+                        });
                     }
                     $scope.filteredObj = $scope.facetsObj;
                 };
@@ -112,28 +126,28 @@ angular.module('MagicSearch')
                     return ret;
                 };
                 // removes a facet from the menu
-                $scope.deleteFacetSelection = function(facetParts) {
+                $scope.deleteFacetSelection = function(facetName, facetValue) {
                     angular.forEach($scope.facetsObj.slice(), function(facet, idx) {
-                        if (facet.name == facetParts[0]) {
+                        if (facet.name == facetName) {
                             if (facet.options === undefined) {
                                 return;  // allow free-form facets to remain
                             }
                             for (var i=0; i<facet.options.length; i++) {
                                 var option = facet.options[i];
-                                if (option.key == facetParts[1]) {
+                                if (option.key == facetValue) {
                                     $scope.facetsObj[idx].options.splice($scope.facetsObj[idx].options.indexOf(option), 1);
                                 }
                             }
                             if (facet.options.length === 0) {
-                                $scope.facetsObj.splice($scope.facetsObj.indexOf(facet), 1);
+                                $scope.deleteFacetEntirely(facetName);
                             }
                         }
                     });
                 };
-                $scope.deleteFacetEntirely = function(facetParts) {
+                $scope.deleteFacetEntirely = function(facetName) {
                     // remove entire facet
                     angular.forEach($scope.facetsObj.slice(), function(facet, idx) {
-                        if (facet.name == facetParts[0]) {
+                        if (facet.name == facetName) {
                             $scope.facetsObj.splice($scope.facetsObj.indexOf(facet), 1);
                         }
                     });
@@ -181,10 +195,13 @@ angular.module('MagicSearch')
                     if (key == 13) {  // enter, so accept value
                         // if tag search, treat as regular facet
                         if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
-                            var curr = $scope.facetSelected;
-                            curr.name = curr.name + '=' + searchVal;
-                            curr.label[1] = searchVal;
-                            $scope.currentSearch.push(curr);
+
+                            $scope.currentSearch.push({
+                                name: $scope.facetSelected.name,
+                                nameLabel: $scope.facetSelected.label[0],
+                                value: searchVal
+                            });
+
                             $scope.resetState();
                             $scope.emitQuery();
                             $scope.showMenu($event);
@@ -193,11 +210,17 @@ angular.module('MagicSearch')
                         // if text search treat as search
                         else {
                             for (i=0; i<$scope.currentSearch.length; i++) {
-                                if ($scope.currentSearch[i].name.indexOf('text') === 0) {
+                                if ($scope.currentSearch[i].name === 'text') {
                                     $scope.currentSearch.splice(i, 1);
                                 }
                             }
-                            $scope.currentSearch.push({'name':'text='+searchVal, 'label':[$scope.strings.text, searchVal]});
+
+                            $scope.currentSearch.push({
+                                name: 'text',
+                                nameLabel: $scope.strings.text,
+                                value: searchVal
+                            });
+
                             $scope.$apply();
                             $scope.hideMenu($event);
                             searchInput.val('');
@@ -324,15 +347,19 @@ angular.module('MagicSearch')
                     });
                 };
                 // when option clicked, complete facet and send event
-                $scope.optionClicked = function($index, $event, name) {
+                $scope.optionClicked = function($index, $event, option) {
                     $scope.hideMenu($event);
-                    var curr = $scope.facetSelected;
-                    curr.name = curr.name + '=' + name;
-                    curr.label[1] = $scope.filteredOptions[$index].label;
-                    if (Array.isArray(curr.label[1])) {
-                        curr.label[1] = curr.label[1].join('');
-                    }
-                    $scope.currentSearch.push(curr);
+
+                    var labels = $scope.filteredOptions[$index].label;
+                    var optionLabel = Array.isArray(labels) ? labels.join('') : labels;
+
+                    $scope.currentSearch.push({
+                        name: $scope.facetSelected.name,
+                        nameLabel: $scope.facetSelected.label[0],
+                        value: option,
+                        valueLabel: optionLabel
+                    });
+
                     $scope.syncCurrentSearchToUrl();
                     $scope.resetState();
                     $scope.emitQuery();
@@ -341,30 +368,22 @@ angular.module('MagicSearch')
 
                 // send event with new query string
                 $scope.emitQuery = function(removed) {
-                    var query = '';
-                    for (var i=0; i<$scope.currentSearch.length; i++) {
-                        if ($scope.currentSearch[i].name.indexOf('text') !== 0) {
-                            if (query.length > 0) query = query + "&";
-                            query = query + $scope.currentSearch[i].name;
-                        }
-                    }
-                    if (removed !== undefined && removed.indexOf('text') === 0) {
+                    if (removed !== undefined && removed === 'text') {
                         $scope.$emit('textSearch', '', $scope.filter_keys);
                         $scope.textSearch = undefined;
                     }
                     else {
-                        $scope.$emit('searchUpdated', query);
+                        $scope.$emit('searchUpdated', $scope.currentSearch);
                         if ($scope.currentSearch.length > 0) {
                             // prune facets as needed from menus
-                            var newFacet = $scope.currentSearch[$scope.currentSearch.length-1].name;
-                            var facetParts = newFacet.split('=');
+                            var newFacet = $scope.currentSearch[$scope.currentSearch.length-1];
                             angular.forEach($scope.facetsSave, function(facet, idx) {
-                                if (facet.name == facetParts[0]) {
+                                if (facet.name == newFacet.name) {
                                     if (facet.singleton === true) {
-                                        $scope.deleteFacetEntirely(facetParts);
+                                        $scope.deleteFacetEntirely(facet.name);
                                     }
                                     else {
-                                        $scope.deleteFacetSelection(facetParts);
+                                        $scope.deleteFacetSelection(facet.name, newFacet.value);
                                     }
                                 }
                             });
