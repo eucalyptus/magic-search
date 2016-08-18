@@ -24,6 +24,13 @@ angular.module('MagicSearch')
                 return elem.template;
             },
             controller: function ($scope, $element, $timeout, $location) {
+
+                var KEY_CODE_ENTER = 13,
+                    KEY_CODE_TAB = 9,
+                    KEY_CODE_ESC = 27,
+                    KEY_CODE_BACKSPACE = 8,
+                    KEY_CODE_DELETE = 46;
+
                 var searchInput = $element.find('.search-input');
                 $scope.promptString = $scope.strings.prompt;
                 $scope.currentSearch = [];
@@ -154,7 +161,7 @@ angular.module('MagicSearch')
                 };
                 searchInput.on('keydown', function($event) {
                     var key = $event.keyCode || $event.charCode;
-                    if (key == 9) {  // prevent default when we can.
+                    if (key == KEY_CODE_TAB) {  // prevent default when we can.
                         $event.preventDefault();
                     }
                 });
@@ -164,7 +171,7 @@ angular.module('MagicSearch')
                     }
                     var searchVal = searchInput.val();
                     var key = $event.keyCode || $event.charCode;
-                    if (key == 9) {  // tab, so select facet if narrowed down to 1
+                    if (key == KEY_CODE_TAB) {  // tab, so select facet if narrowed down to 1
                         if ($scope.facetSelected === undefined) {
                             if ($scope.filteredObj.length != 1) return;
                             $scope.facetClicked(0, '', $scope.filteredObj[0].name);
@@ -179,7 +186,7 @@ angular.module('MagicSearch')
                         });
                         return;
                     }
-                    if (key == 27) {  // esc, so cancel and reset everthing
+                    if (key == KEY_CODE_ESC) {  // esc, so cancel and reset everthing
                         $timeout(function() {
                             $scope.hideMenu();
                             searchInput.val('');
@@ -192,7 +199,7 @@ angular.module('MagicSearch')
                         $scope.$emit('textSearch', textFilter, $scope.filter_keys);
                         return;
                     }
-                    if (key == 13) {  // enter, so accept value
+                    if (key == KEY_CODE_ENTER) {  // enter, so accept value
                         // if tag search, treat as regular facet
                         if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
 
@@ -247,7 +254,13 @@ angular.module('MagicSearch')
                 searchInput.on('keypress', function($event) {  // handle character input
                     var searchVal = searchInput.val();
                     var key = $event.which || $event.keyCode || $event.charCode;
-                    if (key != 8 && key != 46 && key != 13 && key != 9 && key != 27) {
+
+                    if (key != KEY_CODE_BACKSPACE &&
+                        key != KEY_CODE_DELETE &&
+                        key != KEY_CODE_ENTER &&
+                        key != KEY_CODE_TAB &&
+                        key != KEY_CODE_ESC)
+                    {
                         searchVal = searchVal + String.fromCharCode(key).toLowerCase();
                     }
                     if (searchVal == ' ') {  // space and field is empty, show menu
@@ -266,7 +279,7 @@ angular.module('MagicSearch')
                         }
                         return;
                     }
-                    if (key != 8 && key != 46) {
+                    if (key != KEY_CODE_BACKSPACE && key != KEY_CODE_DELETE) {
                         $scope.filterFacets($event, searchVal);
                     }
                 });
