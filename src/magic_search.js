@@ -468,7 +468,14 @@ angular.module('MagicSearch')
                 $scope.hideMenu = function() {
                     $(document).foundation('dropdown', 'closeall');
                 };
+
                 $scope.initSearch();
+
+                // send the first set of data out if any was found in the url
+                // during initSearch
+                if ($scope.currentSearch.length > 0) {
+                    $scope.emitQuery();
+                }
             }
         };
     })
