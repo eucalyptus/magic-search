@@ -204,6 +204,16 @@ angular.module('MagicSearch')
                         $scope.$emit('textSearch', textFilter, $scope.filter_keys);
                         return;
                     }
+                    if (key === KEY_CODE_BACKSPACE || key === KEY_CODE_DELETE) {
+                        if (!searchVal && $scope.currentSearch.length > 0) {
+                            var removed = $scope.removeFacet($scope.currentSearch.length-1, $event);
+                            if (removed === 'text') {
+                                $scope.emitQuery(removed);
+                            }
+                            $scope.emitQuery();
+                            $scope.$apply();
+                        }
+                    }
                     if (key == KEY_CODE_ENTER) {  // enter, so accept value
                         // if tag search, treat as regular facet
                         if ($scope.facetSelected && $scope.facetSelected.options === undefined) {
@@ -433,6 +443,7 @@ angular.module('MagicSearch')
                     $scope.facetsObj = $scope.copyFacets($scope.facetsSave);
                     $scope.currentSearch = [];
                     $scope.initFacets();
+                    return removed;
                 };
                 // clear entire searchbar
                 $scope.clearSearch = function() {
