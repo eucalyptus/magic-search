@@ -55,6 +55,10 @@ angular.module('MagicSearch')
                         }
                     });
 
+                    if ($scope.textSearch !== undefined) {
+                        facetsInUrl.text = $scope.textSearch;
+                    }
+
                     $location.search(facetsInUrl).replace();
                 };
                 $scope.initFacets = function() {
@@ -102,12 +106,13 @@ angular.module('MagicSearch')
                             }
                         });
                     });
-                    if ($scope.textSearch !== undefined) {
+
+                    if ($scope.textSearch !== undefined || urlParams.text) {
 
                         $scope.currentSearch.push({
                             name: 'text',
                             nameLabel: $scope.strings.text,
-                            value: $scope.textSearch
+                            value: $scope.textSearch || urlParams.text
                         });
                     }
                     $scope.filteredObj = $scope.facetsObj;
@@ -233,6 +238,7 @@ angular.module('MagicSearch')
                             searchInput.val('');
                             $scope.$emit('textSearch', searchVal, $scope.filter_keys);
                             $scope.textSearch = searchVal;
+                            $scope.emitQuery();
                         }
                         $scope.filteredObj = $scope.facetsObj;
                         $scope.syncCurrentSearchToUrl();
