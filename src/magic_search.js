@@ -218,9 +218,10 @@ angular.module('MagicSearch')
                             $scope.emitQuery();
                             $scope.showMenu($event);
                             $scope.$apply();
+                            $scope.syncCurrentSearchToUrl();
                         }
                         // if text search treat as search
-                        else {
+                        else if (searchVal !== '') {
                             for (i=0; i<$scope.currentSearch.length; i++) {
                                 if ($scope.currentSearch[i].name === 'text') {
                                     $scope.currentSearch.splice(i, 1);
@@ -239,9 +240,9 @@ angular.module('MagicSearch')
                             $scope.$emit('textSearch', searchVal, $scope.filter_keys);
                             $scope.textSearch = searchVal;
                             $scope.emitQuery();
+                            $scope.syncCurrentSearchToUrl();
                         }
                         $scope.filteredObj = $scope.facetsObj;
-                        $scope.syncCurrentSearchToUrl();
                     }
                     else {
                         if (searchVal === '') {
