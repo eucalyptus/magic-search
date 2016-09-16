@@ -49,7 +49,7 @@ angular.module('MagicSearch')
                 };
                 $scope.syncCurrentSearchToUrl = function() {
                     var facetsInUrl = angular.copy($location.search());
-                    $scope.currentSearch.forEach(facet => {
+                    $scope.currentSearch.forEach(function(facet) {
                         if (!facetsInUrl[facet.name]) {
                             facetsInUrl[facet.name] = facet.value;
                         }
