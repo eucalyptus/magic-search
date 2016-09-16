@@ -49,6 +49,9 @@ $itembackground: #e6e7e8;
     margin-bottom: 0.5rem;
     padding: 0.25rem;
     height: auto;
+    a.remove, a.cancel {
+        cursor: pointer;
+    }
     i.fi-filter {
         color: $iconcolor;
         position: absolute;

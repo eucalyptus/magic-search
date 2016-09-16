@@ -4,10 +4,10 @@
         <i class="fa fa-filter go"></i>
         <div class="search-main-area">
             <span class="item-list">
-                <span class="label radius secondary item"
-                      ng-repeat="facet in currentSearch" ng-cloak="cloak">
+                <span data-facet-name={{facet.name}} class="label radius secondary item" ng-repeat="facet in currentSearch" ng-cloak="cloak">
                     <span>
-                        {{ facet.label[0] }}:<b>{{ facet.label[1] }}</b>
+                        <span class="facet-label">{{ facet.nameLabel }}:</span>
+                        <span class="facet-value">{{ facet.valueLabel || facet.value }}</span>
                     </span>
                     <a class="remove" ng-click="removeFacet($index, $event)" title="{{ strings.remove }}">
                         <i class="fa fa-times"></i>
@@ -18,10 +18,11 @@
                 {{ facetSelected.label[0] }}:
             </span>
             <!-- For bootstrap, the dropdown attribute is moved from input up to div. -->
-            <div class="search-entry" dropdown="" is-open="isMenuOpen">
-                <input class="search-input" type="text" dropdown-toggle=""
+            <div class="search-entry" uib-dropdown is-open="isMenuOpen">
+                <input class="search-input" type="text" uib-dropdown-toggle
                        placeholder="{{ strings.prompt }}" autocomplete="off">
-                <ul class="facet-drop f-dropdown dropdown-menu" data-dropdown-content="">
+                <ul class="facet-drop f-dropdown dropdown-menu" data-dropdown-content=""
+                    ng-show="(!facetSelected && filteredObj.length &gt; 0) || (facetSelected && filteredOptions.length &gt; 0)">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
                         <a ng-click="facetClicked($index, $event, facet.name)"
                            ng-show="!isMatchLabel(facet.label)">{{ facet.label }}</a>
@@ -43,7 +44,7 @@
                 </ul>
             </div>
         </div>
-        <a ng-click="clearSearch()" ng-show="currentSearch.length &gt; 0" title="{{ strings.cancel }}">
+        <a class="cancel" ng-click="clearSearch()" ng-show="currentSearch.length &gt; 0" title="{{ strings.cancel }}">
             <i class="fa fa-times cancel"></i>
         </a>
     </div>

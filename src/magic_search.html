@@ -4,10 +4,10 @@
         <i class="fi-filter go"></i>
         <div class="search-main-area">
             <span class="item-list">
-                <span class="label radius secondary item"
-                      ng-repeat="facet in currentSearch" ng-cloak="cloak">
+                <span data-facet-name={{facet.name}} class="label radius secondary item" ng-repeat="facet in currentSearch" ng-cloak="cloak">
                     <span>
-                        {{ facet.label[0] }}:<b>{{ facet.label[1] }}</b>
+                        <span class="facet-label">{{ facet.nameLabel }}:</span>
+                        <span class="facet-value">{{ facet.valueLabel || facet.value }}</span>
                     </span>
                     <a class="remove" ng-click="removeFacet($index, $event)" title="{{ strings.remove }}">
                         <i class="fi-x"></i>
@@ -20,7 +20,8 @@
             <div class="search-entry" is-open="isMenuOpen">
                 <input class="search-input" type="text" data-dropdown="facet-drop" dropdown-toggle=""
                        placeholder="{{ strings.prompt }}" autocomplete="off" />
-                <ul id="facet-drop" class="f-dropdown dropdown-menu" data-dropdown-content="" ng-show="filteredObj.length > 0">
+                <ul id="facet-drop" class="f-dropdown dropdown-menu" data-dropdown-content=""
+                    ng-show="(!facetSelected && filteredObj.length &gt; 0) || (facetSelected && filteredOptions.length &gt; 0)">
                     <li ng-repeat="facet in filteredObj" ng-show="!facetSelected">
                         <a ng-click="facetClicked($index, $event, facet.name)"
                            ng-show="!isMatchLabel(facet.label)">{{ facet.label }}</a>
@@ -42,7 +43,7 @@
                 </ul>
             </div>
         </div>
-        <a ng-click="clearSearch()" ng-show="currentSearch.length &gt; 0" title="{{ strings.cancel }}">
+        <a class="cancel" ng-click="clearSearch()" ng-show="currentSearch.length &gt; 0" title="{{ strings.cancel }}">
             <i class="fi-x cancel"></i>
         </a>
     </div>
